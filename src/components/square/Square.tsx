@@ -1,6 +1,4 @@
-// import React from 'react';
-
-import { SquareValue } from "./models/SquareValue";
+import { SquareValue } from "../../models/SquareValue";
 
 interface Properties {
     onClick: () => void;

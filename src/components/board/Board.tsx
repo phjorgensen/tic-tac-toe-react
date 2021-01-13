@@ -1,6 +1,6 @@
 import React from 'react';
-import { SquareValue } from './models/SquareValue';
-import { Square } from './square';
+import { SquareValue } from '../../models/SquareValue';
+import { Square } from '../square/Square';
 
 interface State {
     squares: SquareValue[];
@@ -10,7 +10,7 @@ interface State {
 
 interface Properties { }
 
-export class Board extends React.Component {
+export class Board extends React.Component<Properties, State> {
     public state: State;
 
     public constructor(props: Properties) {
