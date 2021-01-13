@@ -5,43 +5,41 @@ import { Square } from './square';
 interface State {
     squares: SquareValue[];
     xIsNext: boolean;
-    winnerDeclared: boolean;
+    displayReset: boolean;
 }
 
 interface Properties { }
 
 export class Board extends React.Component {
-    state: State;
+    public state: State;
 
-    currentSymbol = 'X';
-
-    constructor(props: Properties) {
+    public constructor(props: Properties) {
         super(props);
 
         this.state = {
             squares: Array(9).fill(undefined),
             xIsNext: true,
-            winnerDeclared: false,
+            displayReset: false,
         };
     }
 
-    renderSquare(i: number) {
+    private renderSquare(i: number) {
         return <Square
             value={this.state.squares[i]}
             onClick={() => this.handleClick(i)}
         />;
     }
 
-    handleReset() {
+    private handleReset() {
         this.setState({
             squares: Array(9).fill(undefined),
             xIsNext: true,
-            winnerDeclared: false,
+            displayReset: false,
         });
     }
 
     private handleClick(i: number): void {
-        if (this.state.winnerDeclared) {
+        if (this.state.displayReset) {
             return;
         }
 
@@ -59,8 +57,8 @@ export class Board extends React.Component {
         });
     }
 
-    private calculateWinner(squares: ('X' | 'O' | undefined)[]): SquareValue {
-        const winningLines = [
+    private calculateWinner(squares: SquareValue[]): SquareValue {
+        const winningLines: number[][] = [
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
@@ -83,34 +81,54 @@ export class Board extends React.Component {
         return undefined;
     }
 
-    render() {
-        const winner = this.calculateWinner(this.state.squares);
+    private stillOpenSpaces(squares: SquareValue[]): boolean {
+        for (const square of squares) {
+            if (square === undefined) {
+                return true;
+            }
+        }
 
-        let status = undefined;
+        return false;
+    }
+
+    private getStatusText(): string {
+        const winner = this.calculateWinner(this.state.squares);
+        const openSpaces = this.stillOpenSpaces(this.state.squares);
 
         if (winner) {
-            status = `Winner: ${winner}`;
+            if (!this.state.displayReset) {
+                this.setState({ displayReset: true });
+            }
+
+            return `Winner: ${winner}`;
+        }
+        else if (!openSpaces) {
+            if (!this.state.displayReset) {
+                this.setState({ displayReset: true });
+            }
+
+            return 'No winner';
         }
         else {
-            status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+            return `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
         }
+    }
 
-        if (winner && !this.state.winnerDeclared) {
-            this.setState({ winnerDeclared: true });
-        }
+    private getResetButton(): JSX.Element {
+        return (
+            <div>
+                <button onClick={() => this.handleReset()}>Reset</button>
+            </div>
+        );
+    }
 
-        let resetButton;
-        if (this.state.winnerDeclared) {
-            resetButton = (
-                <div>
-                    <button onClick={() => this.handleReset()}>Reset</button>
-                </div>
-            )
-        }
+    public render(): JSX.Element {
+        const status = this.getStatusText();
+        // const resetButton = this.getResetButton();
 
         return (
             <div>
-                {resetButton}
+                {this.state.displayReset ? this.getResetButton() : undefined}
                 <div className="status">{status}</div>
                 <div className="board-row">
                     {this.renderSquare(0)}
