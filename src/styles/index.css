@@ -1,6 +1,9 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+    /* margin: 20px; */
+    background-color: rgb(245, 255, 252);
+    padding: 0;
+    margin: 0;
 }
 
 ol,
