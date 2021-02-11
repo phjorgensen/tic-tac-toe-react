@@ -1,4 +1,5 @@
 import { SquareValue } from "../../models/SquareValue";
+import './Square.css';
 
 interface Properties {
     onClick: () => void;

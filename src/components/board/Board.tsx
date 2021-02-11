@@ -1,6 +1,7 @@
 import React from 'react';
 import { SquareValue } from '../../models/SquareValue';
 import { Square } from '../square/Square';
+import './Board.css';
 
 interface State {
     squares: SquareValue[];
